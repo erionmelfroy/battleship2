@@ -39,6 +39,8 @@ class Friend extends Player {
     }
   }
   seekHit (r, c) {
+    if (!gameMaps.inBounds(r, c)) return false
+
     const key = this.score.createShotKey(r, c)
     if (key === null) {
       // if we are here, it is because of carpet bomb, so we can just

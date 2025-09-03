@@ -141,6 +141,15 @@ export class PlayerUI {
       'Invalid cell' + JSON.stringify(result) + 'at ' + r + ',' + c
     )
   }
+  displayAs (cell, what) {
+    cell.classList.add(what)
+    what[0].toUpperCase()
+    gameStatus.info(what[0].toUpperCase() + what.slice(1) + '!')
+  }
+  cellHit (r, c) {
+    const cell = this.gridCellAt(r, c)
+    this.displayAs(cell, 'hit')
+  }
   cellMiss (r, c) {
     const cell = this.gridCellAt(r, c)
 

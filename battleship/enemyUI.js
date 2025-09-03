@@ -35,15 +35,7 @@ class EnemyUI extends PlayerUI {
     gameStatus.display('Enemy Fleet Revealed', 'You Gave Up')
     this.board.classList.add('destroyed')
   }
-  displayAs (cell, what) {
-    cell.classList.add(what)
-    what[0].toUpperCase()
-    gameStatus.info(what[0].toUpperCase() + what.slice(1) + '!')
-  }
-  cellHit (r, c) {
-    const cell = this.gridCellAt(r, c)
-    this.displayAs(cell, 'hit')
-  }
+
   displayAsSunk (cell, letter) {
     cell.textContent = letter
     cell.style.color = gameMaps.shipLetterColors[letter] || '#fff'
