@@ -1,0 +1,202 @@
+
+        .battleship {
+            box-sizing: border-box
+        }
+        .panel {
+            background: #0e1530;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #1b2746
+        }
+        .board-wrap {
+            background: #0e1530;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #1b2746
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(var(--cols), var(--boxSize));
+            grid-template-rows: repeat(var(--rows), var(--boxSize));
+            gap: 0px;
+        }
+        .board.selected {
+            background: transparent ; 
+        }
+        .ship-ghost {
+              position: fixed;
+              pointer-events: none; 
+              background: transparent ; 
+          }
+        /* destroyed (desaturated) board */
+        .board.destroyed .land.light,
+        .board.destroyed .sea.light {
+            background: #777 ; 
+        }
+        .board.destroyed .land.dark,
+        .board.destroyed .sea.dark {
+            background: #555 ; 
+        }
+        /* cells */
+      .cell {
+            width: var(--boxSize);
+            height: var(--boxSize);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .cell.bad {
+            border: 2px solid red;
+        } 
+
+        .cell.good {
+            border: 2px solid green;
+        } 
+        .cell.land.light {
+            background: #348239
+        } 
+        .cell.land.dark {
+            background:  #296334
+        }
+        .cell.sea.light {
+            background:  #1A78D6
+        } 
+        .cell.sea.dark {
+            background:   #1761B0
+        }
+        .cell.land.light.bad {
+            background: #B48239
+        } 
+        .cell.land.dark.bad {
+            background:  #A96334
+        }
+        .cell.sea.light.bad {
+            background:  #BA78D6
+        } 
+        .cell.sea.dark.bad {
+            background:   #9761B0
+        }
+        .cell.land.light.good {
+            background: #34F239
+        } 
+        .cell.land.dark.good {
+            background:  #29C334
+        }
+        .cell.sea.light.good {
+            background:  #1AE8D6
+        } 
+        .cell.sea.dark.good {
+            background:   #17C1B0
+        }
+        .cell.empty {
+            background:   transparent
+        }
+        .cell.rightEdge.light {
+            border-right: 2px solid #024 ;
+        }
+        .cell.bottomEdge.light {
+            border-bottom: 2px solid #024;
+        }
+        .cell.rightEdge.dark {
+            border-right: 2px solid #000 ;
+        }
+        .cell.bottomEdge.dark {
+            border-bottom: 2px solid #000;
+        }
+        .cell.leftEdge.light {
+            border-left: 2px solid #024 ;
+        }
+        .cell.leftEdge.dark {
+            border-left: 2px solid #000 ;
+        }
+        .cell.miss::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #91a3c6
+        }
+        .cell.hit {
+            color: #ff3b3b
+        }
+        .cell.hit::after {
+            content: 'X';
+            font-size: 80%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            color: #ff3b3b
+        }
+        .clicked {
+            border: 3px solid goldenrod
+        }
+        .tally-row {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            align-items: center
+        }
+        .tally-box {
+            width: 28px;
+            height: 22px;
+            border-radius: 4px;
+            border: 1px solid rgba(200, 210, 240, 0.06);
+            display: grid;
+            place-items: center;
+            font-weight: 700
+        }
+        button {
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: none;
+            background: #2b4066;
+            color: #aaccff;
+            cursor: pointer
+        }
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed
+        }
+        span.shortcut {
+            color: #FFF;
+            font-weight: 900;
+        }
+        .status {
+            margin-top: 8px;
+            color: #111;
+            font-size: 150%
+        }
+        .info {
+            color: #fff
+        }
+        h2 {
+            margin: 0 0 12px 0
+        } 
+
+
+/* old #3B893E  */
+/* old #2C662E. */
+        /* old  
+        .land.light {
+            background: #3F9149
+        }
+        .land.dark {
+            background:  #337445
+        }
+        .cell.land.light {
+            background: #3B893E
+        }
+        .cell.land.dark {
+            background: #2C662E
+        }
+        .cell.sea.light {
+            background: #1770C7
+        }
+        .cell.sea.dark {
+            background:  #115494 
+        }
+ */

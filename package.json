@@ -1,0 +1,26 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "Play a challenging version of Battleship with no-touch placement rules and special ships.",
+  "main": "battlehide.js",
+  "scripts": {
+    "lint": "eslint battleship/",
+    "dup": "pmd cpd --minimum-tokens 50 --dir ./battleship/ --language ecmascript"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeoffBurns/battleship.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GeoffBurns/battleship/issues"
+  },
+  "homepage": "https://github.com/GeoffBurns/battleship#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "eslint": "^9.34.0",
+    "globals": "^16.3.0"
+  }
+}

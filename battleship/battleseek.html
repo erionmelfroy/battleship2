@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>No-Touch Battleship – 18×7</title>
+
+    <meta
+      name="description"
+      content="Play a challenging version of Battleship with no-touch placement rules and special ships."
+    >
+
+    <link rel="stylesheet" href="battleseek.css">
+  </head>
+  <body>
+    <div class="battleship" style="width: 546px">
+      <div style="margin-bottom: 30px; margin-top: 30px">
+        <label for="chooseMap" style="font-size: 130%; font-weight: 900"
+          >Choose a Map:
+        </label>
+        <select
+          id="chooseMap"
+          style="font-size: 120%; font-weight: bold"
+        ></select>
+      </div>
+      <div class="container">
+        <h2 style="text-align: center">Enemy Waters</h2>
+        <div class="board-wrap" style="width: 520px">
+          <div class="board" id="enemy-board"></div>
+        </div>
+        <div
+          class="status"
+          id="statusLine"
+          style="
+            font-weight: bold;
+            height: 52px;
+            margin-bottom: 30px;
+            margin-top: 45px;
+          "
+        >
+          <div
+            id="gameStatus"
+            style="float: left; text-align: left; width: 65%"
+          >
+            Click On Square To Fire
+          </div>
+          <div
+            id="modeStatus"
+            style="float: right; text-align: right; width: 35%"
+          >
+            Single Shot Mode
+          </div>
+        </div>
+        <div
+          class="panel"
+          style="
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            width: 520px;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              margin-bottom: 8px;
+            "
+          >
+            <button id="newGame" type="button"><span class="shortcut">R</span>estart</button>
+            <button id="carpetBtn" type="button">
+              <span class="shortcut">M</span>ega Bomb
+            </button>
+            <button id="revealBtn" type="button">Re<span class="shortcut">v</span>eal</button>
+          </div>
+          <div>
+            <h4 style="color: white; margin-top: 0px; margin-bottom: 12px">
+              Tally Boxes
+            </h4>
+            <div id="enemy-tallyBox"></div>
+          </div>
+          <div>
+            <div class="info">Shots: <span id="enemy-shots">0 </span></div>
+            <div class="info">Hits: <span id="enemy-hits">0 </span></div>
+            <div class="info">Sunk: <span id="enemy-sunk">0 / 8</span></div>
+            <div class="info" style="display: none">
+              Placed: <span id="enemy-placed">0 </span>
+            </div>
+            <div class="info" style="display: none">
+              Endured: <span id="enemy-endured">0 </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./map.js"></script>
+    <script type="module" src="./mapUI.js"></script>
+    <script type="module" src="./utils.js"></script>
+    <script type="module" src="./playerUI.js"></script>
+    <script type="module" src="./player.js"></script>
+    <script type="module" src="./enemyUI.js"></script>
+    <script type="module" src="./enemy.js"></script>
+    <script type="module" src="./battleseek.js"></script>
+  </body>
+</html>

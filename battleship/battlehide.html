@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>No-Touch Battleship – 18×7</title>
+
+    <meta
+      name="description"
+      content="Play a challenging version of Battleship with no-touch placement rules and special ships."
+    >
+
+    <link rel="stylesheet" href="battleseek.css">
+  </head>
+  <body>
+    <div class="battleship">
+      <div class="choose-map-container">
+        <label for="chooseMap" class="choose-map-label"
+          >Choose a Map:
+        </label>
+        <select
+          id="chooseMap"
+          class="choose-map-select"
+        ></select>
+      </div>
+      <div class="container">
+        <h2 class="centered-title">Friendly Waters</h2>
+        <div class="board-wrap">
+          <div
+            class="board"
+            id="friend-board"
+          ></div>
+        </div>
+
+        <div class="board-wrap" id="tray-container">
+          <div
+            id="shipTray"
+            style="
+              display: flex;
+              flex-flow: row wrap;
+              gap: 8px;
+              margin-bottom: 8px;
+            "
+          ></div>
+          <div
+            id="planeTray"
+            style="
+              display: flex;
+              flex-flow: row wrap;
+              gap: 8px;
+              margin-bottom: 8px;
+            "
+          ></div>
+          <div
+            id="buildingTray"
+            style="
+              display: flex;
+              flex-flow: row wrap;
+              gap: 8px;
+              margin-bottom: 8px;
+            "
+          ></div>
+        </div>
+        <div
+          class="status"
+          id="statusLine"
+          style="display:none;"
+        >
+          <div
+            id="gameStatus"
+            style="display:none;float: left; text-align: left; width: 65%;"
+          ></div>
+          <div
+            id="modeStatus"
+            style="display:none;float: right; text-align: right; width: 35%;"
+          ></div>
+        </div>
+        <div
+          class="panel"
+          style="
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            width: 520px;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              flex-direction: column;
+              gap: 8px;
+              margin-bottom: 8px;
+            "
+          >
+            <button id="newGame" type="button"><span class="shortcut">C</span>lear</button>
+            <button id="rotateBtn" type="button" disabled>
+              <span class="shortcut">R</span>otate
+            </button>
+            <button id="flipBtn" type="button" disabled>
+              <span class="shortcut">F</span>lip
+            </button>
+            <button id="testBtn" type="button" style="display: none">
+              <span class="shortcut">T</span>est
+            </button>
+            <button id="stopBtn" type="button" style="display: none">
+              <span class="shortcut">S</span>top
+            </button>
+          </div>
+          <div>
+            <h4 style="color: white; margin-top: 0px; margin-bottom: 12px">
+              Tally Boxes
+            </h4>
+            <div id="friend-tallyBox"></div>
+          </div>
+          <div>
+            <div class="info" id="friend-placed-label">Placed: <span id="friend-placed">0 </span></div>
+            <div class="info" id="friend-shots-label" style="display: none">
+              Shots: <span id="friend-shots">0 </span>
+            </div>
+            <div class="info"  id="friend-hits-label" style="display: none">
+              Hits: <span id="friend-hits">0 </span>
+            </div>
+            <div class="info"  id="friend-sunk-label" style="display: none">
+              Sunk: <span id="friend-sunk">0 / 8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./map.js"></script>
+    <script type="module" src="./mapUI.js"></script>
+    <script type="module" src="./utils.js"></script>
+    <script type="module" src="./playerUI.js"></script>
+    <script type="module" src="./player.js"></script>
+    <script type="module" src="./friendUI.js"></script>
+    <script type="module" src="./selection.js"></script>
+    <script type="module" src="./friend.js"></script>
+    <script type="module" src="./battlehide.js"></script>
+  </body>
+</html>
