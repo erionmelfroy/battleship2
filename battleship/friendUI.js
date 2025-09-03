@@ -1,5 +1,5 @@
 import { gameMaps } from './map.js'
-import { gameStatus, playerUI, ScoreUI } from './playerUI.js'
+import { gameStatus, PlayerUI, ScoreUI } from './playerUI.js'
 import {
   selection,
   setSelection,
@@ -9,39 +9,47 @@ import {
 } from './utils.js'
 
 let lastEntered = [-1, -1]
-export const friendUI = {
-  __proto__: playerUI,
-  board: document.getElementById('friend-board'),
-  score: new ScoreUI('friend'),
-  rotateBtn: document.getElementById('rotateBtn'),
-  flipBtn: document.getElementById('flipBtn'),
-  testBtn: document.getElementById('testBtn'),
-  stopBtn: document.getElementById('stopBtn'),
-  trays: document.getElementById('tray-container'),
-  shipTray: document.getElementById('shipTray'),
-  planeTray: document.getElementById('planeTray'),
-  buildingTray: document.getElementById('buildingTray'),
-  displayFleetSunk: function () {
-    this.gameStatus.display('Your Fleet is Destroyed', '')
+
+export class FriendUI extends PlayerUI {
+  constructor () {
+    super()
+    this.placing = true
+    this.board = document.getElementById('friend-board')
+    this.score = new ScoreUI('friend')
+    this.rotateBtn = document.getElementById('rotateBtn')
+    this.flipBtn = document.getElementById('flipBtn')
+    this.testBtn = document.getElementById('testBtn')
+    this.stopBtn = document.getElementById('stopBtn')
+    this.trays = document.getElementById('tray-container')
+    this.shipTray = document.getElementById('shipTray')
+    this.planeTray = document.getElementById('planeTray')
+    this.buildingTray = document.getElementById('buildingTray')
+  }
+
+  displayFleetSunk () {
+    gameStatus.display('Your Fleet is Destroyed', '')
     this.board.classList.add('destroyed')
-  },
-  markPlaced: function (cells, letter) {
+  }
+
+  markPlaced (cells, letter) {
     this.displaySurround(
       cells,
       letter,
       (r, c) => this.cellMiss(r, c),
       (r, c, letter) => this.cellPlacedAt(r, c, letter)
     )
-  },
-  makeDroppable: function (shipCellGrid, ships) {
+  }
+
+  makeDroppable (shipCellGrid, ships) {
     for (const cell of this.board.children) {
       cell.textContent = ''
       cell.classList.remove('hit', 'miss', 'placed')
       this.drop(cell, shipCellGrid, ships)
       this.dragEnter(cell, shipCellGrid)
     }
-  },
-  drop: function (cell, shipCellGrid, ships) {
+  }
+
+  drop (cell, shipCellGrid, ships) {
     cell.addEventListener('drop', e => {
       e.preventDefault()
       this.removeHighlight()
@@ -62,13 +70,27 @@ export const friendUI = {
         this.displayInfo(ships)
       }
     })
-  },
-  removeHighlight: function () {
+  }
+
+  displayAs (cell, what) {
+    cell.classList.add(what)
+    gameStatus.info(what[0].toUpperCase() + what.slice(1) + '!')
+  }
+
+  cellHit (r, c) {
+    const cell = this.gridCellAt(r, c)
+    cell.classList.add('frd-hit')
+    cell.textContent = ''
+    gameStatus.info('You where hit!')
+  }
+
+  removeHighlight () {
     for (const el of this.board.children) {
       el.classList.remove('good', 'bad')
     }
-  },
-  highlight: function (shipCellGrid, r, c) {
+  }
+
+  highlight (shipCellGrid, r, c) {
     if (!selection) return
     r = r || lastEntered[0]
     c = c || lastEntered[1]
@@ -87,8 +109,8 @@ export const friendUI = {
         cell.classList.add(canPlace ? 'good' : 'bad')
       }
     }
-  },
-  dragEnter: function (cell, shipCellGrid) {
+  }
+  dragEnter (cell, shipCellGrid) {
     cell.addEventListener('dragenter', e => {
       e.preventDefault()
 
@@ -100,8 +122,8 @@ export const friendUI = {
       lastEntered = [r, c]
       this.highlight(shipCellGrid, r, c)
     })
-  },
-  removeClicked: function () {
+  }
+  removeClicked () {
     const elements = document.getElementsByClassName('clicked')
     ;[...elements].forEach(element => {
       // Perform actions on each element
@@ -110,16 +132,16 @@ export const friendUI = {
 
     this.rotateBtn.disabled = true
     this.flipBtn.disabled = true
-  },
-  assignClicked: function (ship, clicked) {
+  }
+  assignClicked (ship, clicked) {
     const variantIndex = parseInt(clicked.dataset.variant)
     this.removeClicked()
     setClickedShip(ship, clicked, variantIndex)
     clicked.classList.add('clicked')
     this.rotateBtn.disabled = !clickedShip.canRotate()
     this.flipBtn.disabled = !clickedShip.canFlip()
-  },
-  dragEnd: function (div, callback) {
+  }
+  dragEnd (div, callback) {
     div.addEventListener('dragend', e => {
       const shipElement = e.target
       shipElement.style.opacity = ''
@@ -138,27 +160,27 @@ export const friendUI = {
       }
       if (callback) callback()
     })
-  },
-  dragLeave: function (div) {
+  }
+  dragLeave (div) {
     div.addEventListener('dragleave', e => {
       e.preventDefault()
       for (const el of this.board.children) {
         el.classList.remove('good', 'bad')
       }
     })
-  },
-  makeDraggable: function (dragShip, ship) {
+  }
+  makeDraggable (dragShip, ship) {
     dragShip.setAttribute('draggable', 'true')
     this.dragStart(dragShip, ship)
     this.onClick(dragShip, ship)
-  },
-  onClick: function (dragShip, ship) {
+  }
+  onClick (dragShip, ship) {
     dragShip.addEventListener('click', e => {
       const shipElement = e.currentTarget
       this.assignClicked(ship, shipElement)
     })
-  },
-  dragStart: function (dragShip, ship) {
+  }
+  dragStart (dragShip, ship) {
     dragShip.addEventListener('dragstart', e => {
       const shipElement = e.currentTarget
       const rect = shipElement.getBoundingClientRect()
@@ -182,7 +204,7 @@ export const friendUI = {
       selection.moveTo(e.clientX, e.clientY)
       e.target.style.opacity = 0.6
     })
-  },
+  }
   setDragShipContents (dragShip, cells, letter) {
     const maxR = Math.max(...cells.map(s => s[0])) + 1
     const maxC = Math.max(...cells.map(s => s[1])) + 1
@@ -195,23 +217,26 @@ export const friendUI = {
     )
     for (let r = 0; r < maxR; r++) {
       for (let c = 0; c < maxC; c++) {
-        const cell = document.createElement('div')
-        cell.className = 'cell'
-        if (cells.some(shipcell => shipcell[0] === r && shipcell[1] === c)) {
-          cell.style.background =
-            gameMaps.shipColors[letter] || 'rgba(255, 209, 102, 0.3)'
-          cell.style.color = gameMaps.shipLetterColors[letter] || '#ffd166'
-          cell.textContent = letter
-        } else {
-          cell.classList.add('empty')
-        }
-        cell.dataset.r = r
-        cell.dataset.c = c
-        dragShip.appendChild(cell)
+        this.createCell(dragShip, cells, letter, r, c)
       }
     }
-  },
-  displayAsPlaced: function (cell, letter) {
+  }
+  createCell (dragShip, cells, letter, r, c) {
+    const cell = document.createElement('div')
+    cell.className = 'cell'
+    if (cells.some(shipcell => shipcell[0] === r && shipcell[1] === c)) {
+      cell.style.background =
+        gameMaps.shipColors[letter] || 'rgba(255, 209, 102, 0.3)'
+      cell.style.color = gameMaps.shipLetterColors[letter] || '#ffd166'
+      cell.textContent = letter
+    } else {
+      cell.classList.add('empty')
+    }
+    cell.dataset.r = r
+    cell.dataset.c = c
+    dragShip.appendChild(cell)
+  }
+  displayAsPlaced (cell, letter) {
     cell.textContent = letter
     cell.style.color = gameMaps.shipLetterColors[letter] || '#fff'
     cell.style.background =
@@ -219,12 +244,12 @@ export const friendUI = {
 
     cell.classList.add('placed')
     cell.classList.remove('miss')
-  },
-  cellPlacedAt: function (r, c, letter) {
+  }
+  cellPlacedAt (r, c, letter) {
     const cell = this.gridCellAt(r, c)
     this.displayAsPlaced(cell, letter)
-  },
-  buildTrayItem: function (ship, tray) {
+  }
+  buildTrayItem (ship, tray) {
     const shape = ship.shape()
 
     const dragShipContainer = document.createElement('div')
@@ -243,8 +268,8 @@ export const friendUI = {
     this.makeDraggable(dragShip, ship)
     dragShipContainer.appendChild(dragShip)
     tray.appendChild(dragShipContainer)
-  },
-  buildTrays: function (ships) {
+  }
+  buildTrays (ships) {
     for (const ship of ships) {
       const type = ship.type()
       switch (type) {
@@ -261,8 +286,8 @@ export const friendUI = {
           throw new Error('Unknown type for ' + JSON.stringify(ship, null, 2)) // The 'null, 2' adds indentation for readability);
       }
     }
-  },
-  placeShipBox: function (ship) {
+  }
+  placeShipBox (ship) {
     const box = document.createElement('div')
     box.className = 'tally-box'
     const letter = ship.letter
@@ -274,20 +299,21 @@ export const friendUI = {
     box.style.background = gameMaps.shipColors[letter] || '#333'
     box.style.color = gameMaps.shipLetterColors[letter] || '#fff'
     return box
-  },
-  placeTally: function (ships) {
+  }
+  placeTally (ships) {
     this.score.buildShipTally(ships, this.placeShipBox)
     // no bombs row
-  },
-  clearVisuals: function () {
+  }
+  clearVisuals () {
     for (const el of this.board.children) {
       el.textContent = ''
       el.style.background = ''
       el.style.color = ''
       el.classList.remove('hit', 'miss')
     }
-  },
-  placeMode: function () {
+  }
+  placeMode () {
+    this.placing = true
     const flexStyle =
       'display: flex; flex-flow: row wrap;gap: 8px; margin-bottom: 8px'
     this.testBtn.style.display = 'none'
@@ -305,8 +331,9 @@ export const friendUI = {
     gameStatus.game.style.display = 'none'
     gameStatus.mode.style.display = 'none'
     gameStatus.line.style.display = 'none'
-  },
-  readyMode: function () {
+  }
+  readyMode () {
+    this.placing = false
     this.testBtn.style.display = 'block'
     this.rotateBtn.style.display = 'none'
     this.flipBtn.style.display = 'none'
@@ -316,7 +343,7 @@ export const friendUI = {
     this.buildingTray.style.display = 'none'
     this.trays.style.display = 'none'
     for (const cell of this.board.children) {
-      cell.classList.remove('hit', 'miss', 'placed')
+      cell.classList.remove('hit', 'placed')
     }
     gameStatus.game.setAttribute(
       'style',
@@ -330,8 +357,14 @@ export const friendUI = {
       'style',
       'display:block;font-weight: bold;height: 52px;margin-bottom: 30px;margin-top: 45px;'
     )
-  },
-  testMode: function () {
+  }
+  clearClasses () {
+    for (const cell of this.board.children) {
+      cell.classList.remove('hit', 'frd-hit', 'frd-sunk', 'miss', 'placed')
+    }
+  }
+  testMode () {
+    this.placing = false
     this.testBtn.style.display = 'block'
     this.stopBtn.style.display = 'block'
     this.score.shotsLabel.style.display = 'block'
@@ -356,16 +389,16 @@ export const friendUI = {
       'style',
       'display:block;font-weight: bold;height: 52px;margin-bottom: 30px;margin-top: 45px;'
     )
-  },
-  displayInfo: function (ships) {
+  }
+  displayInfo (ships) {
     const total = ships.length
     const placed = ships.filter(s => s.cells.length > 0).length
     this.score.placed.textContent = `${placed} / ${total}`
     if (total === placed) {
       this.readyMode()
     }
-  },
-  reset: function (ships) {
+  }
+  reset (ships) {
     this.board.innerHTML = ''
     this.shipTray.innerHTML = ''
     this.planeTray.innerHTML = ''
@@ -373,3 +406,4 @@ export const friendUI = {
     this.displayInfo(ships)
   }
 }
+export const friendUI = new FriendUI()

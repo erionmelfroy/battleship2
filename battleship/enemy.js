@@ -7,11 +7,10 @@ import { gameStatus } from './playerUI.js'
 class Enemy extends Player {
   constructor (enemyUI) {
     super(enemyUI)
-    this.shipCellGrid = []
-    this.carpetBombsUsed = 0
+    this.description = 'Enemy'
+    this.preamble = 'The enemy was '
     this.carpetMode = false
     this.isRevealed = false
-    this.boardDestroyed = false
   }
 
   placeAll (ships) {

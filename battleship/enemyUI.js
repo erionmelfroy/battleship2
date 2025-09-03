@@ -53,7 +53,7 @@ class EnemyUI extends PlayerUI {
       cell.textContent = ''
       cell.style.background = ''
       cell.style.color = ''
-      cell.classList.remove('hit', 'miss', 'placed')
+      cell.classList.remove('hit', 'frd-hit', 'miss', 'placed')
     }
   }
   reset () {

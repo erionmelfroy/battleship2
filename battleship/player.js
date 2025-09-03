@@ -65,6 +65,12 @@ export class Player {
     this.ships = []
     this.score = new Score()
     this.UI = ui
+    this.shipCellGrid = []
+    this.boardDestroyed = false
+    this.carpetBombsUsed = 0
+    this.description = 'Your'
+    this.preamble = 'You were '
+    this.resetShipCells()
   }
   createShips () {
     const ships = []
@@ -92,10 +98,13 @@ export class Player {
     this.UI.cellMiss(r, c)
   }
   recordFleetSunk () {
+    console.log('Fleet Sunk!')
+    gameStatus.info('All Ships Destroyed!')
     this.UI.displayFleetSunk()
     this.boardDestroyed = true
   }
   checkFleetSunk () {
+    console.log('ships', this.ships)
     if (this.ships.every(s => s.sunk)) {
       this.recordFleetSunk()
     }
@@ -105,29 +114,34 @@ export class Player {
   }
   markSunk (ship) {
     ship.sunk = true
-    gameStatus.info(ship.sunkDescription())
+    this.sunkWarning(ship)
     this.UI.displaySurround(
       ship.cells,
       ship.letter,
       (r, c) => this.recordAutoMiss(r, c),
       (r, c, letter) => this.UI.cellSunkAt(r, c, letter)
     )
+
+    console.log('surround')
     this.checkFleetSunk()
   }
+  sunkWarning (ship) {
+    gameStatus.info(this.description + ' was ' + ship.sunkDescription())
+  }
+
   checkForHit (r, c, key, shipCell) {
     const hitShip = this.ships.find(s => s.id === shipCell.id)
     if (!hitShip) {
       this.UI.cellMiss(r, c)
+      console.log('miss 2 at ', r, c)
       return { hit: false, sunk: '' }
     }
     hitShip.hits.add(key)
 
     this.UI.cellHit(r, c)
-
     if (hitShip.hits.size === hitShip.cells.length) {
       // ship sunk
       this.markSunk(hitShip)
-
       return { hit: true, sunkLetter: hitShip.letter }
     }
     return { hit: true, sunkLetter: '' }
@@ -137,6 +151,7 @@ export class Player {
     const shipCell = this.shipCellAt(r, c)
     if (!shipCell) {
       this.UI.cellMiss(r, c)
+      console.log('miss at', r, c)
       return { hit: false, sunk: '' }
     }
     return this.checkForHit(r, c, key, shipCell)

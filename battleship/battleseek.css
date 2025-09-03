@@ -57,6 +57,9 @@
         .cell.good {
             border: 2px solid green;
         } 
+        .cell.frd-sunk {
+            border: 2px solid black;
+        } 
         .cell.land.light {
             background: #348239
         } 
@@ -130,6 +133,13 @@
             font-family: Arial, Helvetica, sans-serif;
             font-weight: 900;
             color: #ff3b3b
+        } 
+        .cell.frd-hit::after {
+            content: 'X';
+            font-size: 130%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            color: #380101
         }
         .clicked {
             border: 3px solid goldenrod
@@ -177,26 +187,4 @@
             margin: 0 0 12px 0
         } 
 
-
-/* old #3B893E  */
-/* old #2C662E. */
-        /* old  
-        .land.light {
-            background: #3F9149
-        }
-        .land.dark {
-            background:  #337445
-        }
-        .cell.land.light {
-            background: #3B893E
-        }
-        .cell.land.dark {
-            background: #2C662E
-        }
-        .cell.sea.light {
-            background: #1770C7
-        }
-        .cell.sea.dark {
-            background:  #115494 
-        }
- */
+ 

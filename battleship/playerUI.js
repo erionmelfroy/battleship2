@@ -141,6 +141,18 @@ export class PlayerUI {
       'Invalid cell' + JSON.stringify(result) + 'at ' + r + ',' + c
     )
   }
+  displayAsSunk (cell, letter) {
+    cell.textContent = ''
+    cell.classList.add('frd-sunk')
+    cell.style.background = gameMaps.shipColors[letter] || 'rgba(0,0,0,0.8)'
+    cell.style.color = gameMaps.shipLetterColors[letter] || '#000'
+    cell.classList.remove('hit')
+    cell.classList.remove('miss')
+  }
+  cellSunkAt (r, c, letter) {
+    const cell = this.gridCellAt(r, c)
+    this.displayAsSunk(cell, letter)
+  }
   displayAs (cell, what) {
     cell.classList.add(what)
     what[0].toUpperCase()

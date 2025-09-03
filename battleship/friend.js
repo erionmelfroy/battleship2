@@ -2,26 +2,26 @@ import { gameMaps } from './map.js'
 import { friendUI } from './friendUI.js'
 import { Player } from './player.js'
 import { clickedShip } from './utils.js'
+import { gameStatus } from './playerUI.js'
 
 class Friend extends Player {
   constructor (friendUI) {
     super(friendUI)
-    this.shipCellGrid = []
     this.testContinue = true
   }
-  resetShipCell () {
-    this.shipCellGrid = Array.from({ length: gameMaps.current.rows }, () =>
-      Array(gameMaps.current.cols).fill(null)
-    )
-  }
+
   updateUI (ships) {
     ships = ships || this.ships
-
-    this.UI.placeTally(ships)
+    if (this.UI.placing) {
+      this.UI.placeTally(ships)
+    } else {
+      this.UI.score.display(ships, this.score.noOfShots())
+      this.UI.score.buildTally(this.ships, this.carpetBombsUsed)
+    }
   }
   randomHit (hits) {
     const len = hits.length
-    if (len > 1) return null
+    if (len < 1) return null
     if (len === 1) return hits[0]
     const pick = Math.floor(Math.random() * len)
     return hits[pick]
@@ -30,10 +30,11 @@ class Friend extends Player {
     for (let i = 0; i < 30; i++) {
       const [r, c] = this.randomHit(hits)
       for (let j = 0; j < 15; j++) {
-        if (!friend.testContinue) {
+        if (seeking && (!friend.testContinue || this.boardDestroyed)) {
           clearInterval(seeking)
           return
         }
+        console.log('chasing...', r, c)
         if (this.walkShot(r, c)) return
       }
     }
@@ -63,7 +64,7 @@ class Friend extends Player {
       case 2:
         return this.seekHit(r + 1, c)
       case 3:
-        return this.seekHit(r - 1, c + 1)
+        return this.seekHit(r - 1, c)
       case 4:
         switch (Math.floor(Math.random() * 4)) {
           case 0:
@@ -81,12 +82,14 @@ class Friend extends Player {
   randomSeek (seeking) {
     const maxAttempts = 200
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      if (!friend.testContinue) {
+      if (seeking && (!friend.testContinue || this.boardDestroyed)) {
         clearInterval(seeking)
         return
       }
       const r = Math.floor(Math.random() * gameMaps.current.rows)
       const c = Math.floor(Math.random() * gameMaps.current.cols)
+
+      console.log('random...', r, c)
       if (this.seekHit(r, c)) {
         return
       }
@@ -96,23 +99,30 @@ class Friend extends Player {
     this.testContinue = true
     this.score.shot = new Set()
     let seeking = setInterval(function () {
-      if (friend.testContinue) {
-        friend.seekStep(seeking)
-      } else {
+      if (seeking && (!friend.testContinue || this.boardDestroyed)) {
         clearInterval(seeking)
+      } else {
+        console.log('seeking...')
+        friend.seekStep(seeking)
       }
-    }, 350)
+    }, 270)
   }
   seekStep (seeking) {
-    const hits = this.ships.filter(s => !s.sunk).flatMap(s => [...s.hits])
-
+    const hitss = this.ships.filter(s => !s.sunk).flatMap(s => [...s.hits])
+    const hits = hitss.map(h => {
+      const [r, c] = h.split(',').map(n => parseInt(n))
+      return [r, c]
+    })
+    console.log('hits', hits)
     if (hits.length > 0) {
       this.chase(hits, seeking)
     } else {
       this.randomSeek(seeking)
     }
   }
-
+  sunkWarning (ship) {
+    gameStatus.info(ship.sunkDescription())
+  }
   onClickRotate () {
     if (clickedShip?.canRotate()) {
       clickedShip.rotate()
@@ -132,6 +142,7 @@ class Friend extends Player {
     friend.UI.testMode()
     friend.UI.testBtn.disabled = true
     friend.score.reset()
+    friend.UI.clearClasses()
     friend.seek()
   }
   onClickStop () {
