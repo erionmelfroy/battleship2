@@ -23,9 +23,7 @@ class Enemy extends Player {
       let ok = true
       for (const ship of ships) {
         const placed = randomPlaceShape(ship, this.shipCellGrid)
-        if (placed) {
-          ship.place(placed)
-        } else {
+        if (!placed) {
           ok = false
           break
         }
@@ -71,24 +69,40 @@ class Enemy extends Player {
   }
   onClickCell (r, c) {
     if (enemy.boardDestroyed || enemy.isRevealed) return // no action if game over
-
-    enemy.fireAt(r, c)
-  }
-  fireAt (r, c) {
-    if (!this.score.newShotKey(r, c) && !this.carpetMode) {
-      gameStatus.info('Already Shot Here - Try Again')
+    if (enemy.carpetMode && enemy.carpetBombsUsed >= gameMaps.maxBombs) {
+      gameStatus.info('No Mega Bombs Left - Switch To Single Shot')
+      enemy.carpetMode = false
+      enemy.updateUI()
       return
     }
+    if (enemy?.opponent?.boardDestroyed) {
+      gameStatus.info('Game Over - No More Shots Allowed')
+      return
+    }
+    enemy.tryFireAt(r, c)
+  }
+  tryFireAt (r, c) {
+    if (!this.score.newShotKey(r, c) && !this.carpetMode) {
+      gameStatus.info('Already Shot Here - Try Again')
+      return false
+    }
+    this.fireAt(r, c)
+    this.updateUI()
+    if (enemy?.opponenet) {
+      enemy.opponent.seekStep()
+    }
+    return true
+  }
+  fireAt (r, c) {
     if (this.carpetMode) {
       // Mega Bomb mode: affect 3x3 area centered on (r,c)
       if (this.carpetBombsUsed >= gameMaps.maxBombs) {
-        gameStatus.info('No Mega Bombs Left')
         return
       }
       this.processCarpetBomb(r, c)
       return
     }
-    enemy.processShot(r, c)
+    this.processShot(r, c)
   }
   processCarpetBomb (r, c) {
     let hits = 0
